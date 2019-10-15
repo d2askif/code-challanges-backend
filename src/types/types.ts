@@ -3,3 +3,8 @@ export interface preferredTimeWindow {
   startTimeInMinutes: number;
   endTimeInMinutes: number;
 }
+
+export interface ITimeSlot {
+  startTime: Date;
+  endTime: Date;
+}
