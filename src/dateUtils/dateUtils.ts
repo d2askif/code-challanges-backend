@@ -1,5 +1,6 @@
 import moment from "moment-timezone";
-import { preferredTimeWindow } from "../types/types";
+import { preferredTimeWindow, ITimeSlot } from "../types/types";
+import nonEmptyFilter from "../utils/nonEmptyFilter";
 import _ from "lodash";
 const dateFormat = "YYYY:MM:DD:HH:mm";
 export const getDateRange = (startDate: Date, range: number): string[] => {
@@ -48,7 +49,7 @@ export const availableDateTimeWindow = (
 ) => {
   const dateAndWindow = dateRange.map(dateString => {
     const day = moment(dateString, dateFormat).format("dddd");
-    console.log(day.toLowerCase());
+    // console.log(day.toLowerCase());
 
     const index = preference.findIndex((pref: preferredTimeWindow) => {
       return pref.day === day.toLowerCase();
@@ -75,22 +76,39 @@ export const availableDateTimeWindow = (
     }
     return null;
   });
-  return dateAndWindow;
+  return dateAndWindow.filter(nonEmptyFilter);
 };
 
 export const generateTimeSlots = (
   startTime: Date,
   endTime: Date,
-  interval: number
-) => {
+  intervalInMinutes: number
+): ITimeSlot[] => {
   const timeSlots = [];
   const startTimeMoment = moment(startTime);
   const endTimeMoment = moment(endTime);
   while (startTimeMoment.isBefore(endTimeMoment)) {
     timeSlots.push({
       startTime: moment(startTimeMoment).toDate(),
-      endTime: startTimeMoment.add(interval, "minutes").toDate()
+      endTime: startTimeMoment.add(intervalInMinutes, "minutes").toDate()
     });
   }
-  console.log(timeSlots);
+  return timeSlots;
+};
+
+export const checkForTimeSlotsClash = (
+  bookedSlot: ITimeSlot,
+  generatedSlot: ITimeSlot
+): Boolean => {
+  const bookedStartTime = moment(bookedSlot.endTime);
+  const bookedEndTime = moment(bookedSlot.endTime);
+  const generatedStartTime = moment(generatedSlot.startTime);
+  const generatedEndTime = moment(generatedSlot.endTime);
+  if (
+    generatedStartTime.isBetween(bookedStartTime, bookedEndTime) ||
+    generatedEndTime.isBetween(bookedStartTime, bookedEndTime)
+  ) {
+    return true;
+  }
+  return false;
 };
