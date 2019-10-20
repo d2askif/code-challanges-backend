@@ -65,7 +65,6 @@ export const mapAvailableDateToTimeWindows = (
         bookingStartTime,
         bookingEndTime
       };
-      // console.log({ startTimeInMinutes, endTimeInMinutes });
     }
 
     return null;
@@ -120,7 +119,7 @@ export const generateTimeSlotsForDates = (
   return windowPerDate.map(windowAvailable => {
     return {
       ...windowAvailable,
-      timeSlot: generateTimeSlots(
+      timeSlots: generateTimeSlots(
         windowAvailable.bookingStartTime,
         windowAvailable.bookingEndTime,
         intervalInMinutes
@@ -152,7 +151,7 @@ export const removeBookedTimeSlots = (
   bookedTimeSlots: IDateTimeWindowGrouped
 ) => {
   const openTimeSlots = allTimeSlots.map(datesWithTimeSlot => {
-    const slots = datesWithTimeSlot.timeSlot.filter(slot => {
+    const slots = datesWithTimeSlot.timeSlots.filter(slot => {
       if (!bookedTimeSlots[datesWithTimeSlot.date]) {
         return true;
       }
@@ -168,9 +167,9 @@ export const removeBookedTimeSlots = (
 
     return {
       ...datesWithTimeSlot,
-      timeSlot: slots
+      timeSlots: slots
     };
   });
 
-  return openTimeSlots.filter(slot => slot.timeSlot.length > 0);
+  return openTimeSlots.filter(slot => slot.timeSlots.length > 0);
 };

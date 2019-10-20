@@ -138,8 +138,6 @@ describe("generateTimeSlots", () => {
     const startTime = new Date();
     let endTime = new Date(startTime);
     endTime.setMinutes(endTime.getMinutes() + 60);
-    console.log("endTime", endTime);
-
     const intervalMinutes = 15;
     const timeSlots = generateTimeSlots(startTime, endTime, intervalMinutes);
 

@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "start:dev": "node dist/server.js",
     "start": "nodemon --exec ts-node src/server.ts",
-    "test": "yarn run jest"
+    "test": "yarn run jest",
+    "build": "tsc --version && tsc -d -p tsconfig.json"
   },
   "jest": {
     "transform": {

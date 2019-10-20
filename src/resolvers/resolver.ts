@@ -1,18 +1,6 @@
-import {
-  getDateRange,
-  filterDatesByDay,
-  mapAvailableDateToTimeWindows,
-  generateTimeSlotsForDates,
-  groupBookedTimeSlotsByDate,
-  checkIfTimeSlotsOverLap,
-  removeBookedTimeSlots
-} from "../dateUtils/dateUtils";
-import preferences from "../model/preferences";
-import BookingService from "../services/BookingService";
-import { IBookedTimeSlot } from "../types/types";
-import _ from "lodash";
-import UserService from "../services/UserService";
-import { SchedulingService } from "../services/SchedulingServic";
+import { GraphQLScalarType } from "graphql";
+import { Kind } from "graphql/language";
+import SchedulingService from "../services/SchedulingService";
 
 const weekDays = [
   "monday",
@@ -24,18 +12,29 @@ const weekDays = [
   "sunday"
 ];
 export default {
-  Query: {
-    testMessage: (parent: any, { input }: any, ctx: any, info: any): string => {
-      const bookingService = new BookingService();
-      const userService = new UserService();
-      const schedulingService = new SchedulingService(
-        userService,
-        bookingService
-      );
-      const openTimeSlots = schedulingService.getOpenTimeSlots();
-      openTimeSlots.map(slot => console.log(slot));
+  Date: new GraphQLScalarType({
+    name: "Date",
+    description: "Date custom scalar type",
+    parseValue(value: string) {
+      return new Date(value); // value from the client
+    },
+    serialize(value: Date) {
+      return value.toISOString(); // value sent to the client
+    },
+    parseLiteral(ast) {
+      if (ast.kind === Kind.INT) {
+        return parseInt(ast.value, 10); // ast value is always in string format
+      }
+      return null;
+    }
+  }),
 
-      return "Hello World!";
+  Query: {
+    getOpenTimeSlots: (parent: any, { input }: any, cxt: any, info: any) => {
+      const schedulingService: SchedulingService = cxt.schedulingService;
+      const openTimeSlots = schedulingService.getOpenTimeSlots();
+
+      return openTimeSlots;
     }
   }
 };

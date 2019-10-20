@@ -8,8 +8,9 @@ import {
   groupBookedTimeSlotsByDate,
   removeBookedTimeSlots
 } from "../dateUtils/dateUtils";
+import { IDateWithTimeSlots } from "../types/types";
 
-export class SchedulingService {
+class SchedulingService {
   private userService: UserService;
   private bookingService: BookingService;
 
@@ -58,7 +59,7 @@ export class SchedulingService {
     return bookedTimeSlotsGroupedByDate;
   }
 
-  getOpenTimeSlots() {
+  getOpenTimeSlots(): IDateWithTimeSlots[] {
     const bookedTimeSlotsGroupedByDate = this.getBookedTimeSlots();
     const datesWithTimeSlots = this.getTimeSlots();
     const openTimeSlots = removeBookedTimeSlots(
@@ -69,3 +70,4 @@ export class SchedulingService {
     return openTimeSlots;
   }
 }
+export default SchedulingService;

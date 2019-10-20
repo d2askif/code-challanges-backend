@@ -16,7 +16,7 @@ export interface IDateTimeWindow {
 }
 
 export interface IDateWithTimeSlots extends IDateTimeWindow {
-  timeSlot: ITimeSlot[];
+  timeSlots: ITimeSlot[];
 }
 
 export interface IBookedTimeSlot {
