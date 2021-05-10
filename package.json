@@ -44,7 +44,7 @@
     "graphql": "^14.5.8",
     "graphql-tools": "^4.0.5",
     "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.26",
     "mongoose": "^5.7.1"
